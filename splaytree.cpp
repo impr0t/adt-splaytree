@@ -1,24 +1,29 @@
 #include "splaytree.h"
 #include <iostream>
 
+void debug(std::string message)
+{
+    std::cout << message << std::endl;
+}
+
+/**
+* This function inserts a new node into the tree.
+*/
 Node *SplayTree::insert(Node *n, int data)
 {
     std::cout << "inserting " << data << std::endl;
 
     if (n == nullptr)
     {
-        std::cout << "n was null, setting root." << std::endl;
         return new Node(data);
     }
 
-    std::cout << "splaying n" << std::endl;
     n = splay(n, data);
 
     if (n->getData() == data)
         return n;
 
     Node *newest = new Node(data);
-    std::cout << "created new node" << std::endl;
 
     if (n->getData() > data)
     {
@@ -26,8 +31,7 @@ Node *SplayTree::insert(Node *n, int data)
         newest->left = n->left;
         n->left = nullptr;
     }
-
-    if (n->getData() < data)
+    else
     {
         newest->left = n;
         newest->right = n->right;
@@ -39,10 +43,25 @@ Node *SplayTree::insert(Node *n, int data)
 
 void SplayTree::remove(int data)
 {
-    // Node *found = find() data);
-    // if (found != nullptr)
-    // {
-    // }
+    if (root == nullptr)
+        return;
+
+    root = splay(root, data);
+
+    if (root->getData() == data)
+    {
+        if (root->left == nullptr)
+        {
+            root = root->right;
+        }
+        else
+        {
+            Node *r = root->right;
+            root = root->left;
+            splay(root, data);
+            root->right = r;
+        }
+    }
 }
 
 /**
@@ -51,8 +70,7 @@ void SplayTree::remove(int data)
 */
 Node *SplayTree::find(Node *n, int data)
 {
-    root = splay(n, data);
-    return root;
+    return splay(n, data);
 }
 
 /**
@@ -90,8 +108,6 @@ Node *SplayTree::rotateLeft(Node *a)
 */
 Node *SplayTree::splay(Node *n, int data)
 {
-    std::cout << "splaying " << n->getData() << std::endl;
-
     // if our node is null or the data is what we're looking for
     // just return this.
     if (n == nullptr || n->getData() == data)
@@ -99,34 +115,7 @@ Node *SplayTree::splay(Node *n, int data)
 
     // since the splay tree is a binary search tree with some fanciness
     // we can locate out data using the bst search method.
-    if (n->getData() < data)
-    {
-        // if our right node is not there, we can just return this node
-        // we weren't able to find it.
-        if (n->right == nullptr)
-            return n;
-
-        // so if we're still traversing we can find the data
-        // here we have a conditon where we'll need to zig-zag.'
-        if (n->right->getData() < data)
-        {
-            // zig-zag
-            n->right->left = splay(n->right->left, data);
-            if (n->right->left != nullptr)
-                n->right = rotateRight(n->right);
-        }
-        else if (n->right->getData() < data)
-        {
-            n->right->right = splay(n->right->right, data);
-            n = rotateLeft(n);
-        }
-
-        if (n->right == nullptr)
-            return n;
-        else
-            rotateLeft(n);
-    }
-    else
+    if (n->getData() > data)
     {
         // can't find it.'
         if (n->left == nullptr)
@@ -151,14 +140,46 @@ Node *SplayTree::splay(Node *n, int data)
         else
             return rotateRight(n);
     }
+    else
+    {
+        // if our right node is not there, we can just return this node
+        // we weren't able to find it.
+        if (n->right == nullptr)
+            return n;
+
+        // so if we're still traversing we can find the data
+        // here we have a conditon where we'll need to zig-zag.'
+        if (n->right->getData() > data)
+        {
+            // zig-zag
+            n->right->left = splay(n->right->left, data);
+            if (n->right->left != nullptr)
+                n->right = rotateRight(n->right);
+        }
+        else if (n->right->getData() < data)
+        {
+            n->right->right = splay(n->right->right, data);
+            n = rotateLeft(n);
+        }
+
+        if (n->right == nullptr)
+            return n;
+        else
+            return rotateLeft(n);
+    }
 }
 
+/**
+* Function displays an in-order traversal of
+* the data structure. Since this is a BST we're'
+* expecting a sorted list.
+*/
 void SplayTree::view(Node *n)
 {
     if (n == nullptr)
         return;
 
     view(n->left);
-    std::cout << n->getData();
+    std::cout << n->getData() << " ";
     view(n->right);
 }
