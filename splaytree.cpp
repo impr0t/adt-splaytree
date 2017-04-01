@@ -1,5 +1,6 @@
 #include "splaytree.h"
 #include <iostream>
+#include <iomanip>
 
 void debug(std::string message)
 {
@@ -11,8 +12,6 @@ void debug(std::string message)
 */
 Node *SplayTree::insert(Node *n, int data)
 {
-    std::cout << "inserting " << data << std::endl;
-
     if (n == nullptr)
     {
         return new Node(data);
@@ -169,17 +168,72 @@ Node *SplayTree::splay(Node *n, int data)
     }
 }
 
-/**
-* Function displays an in-order traversal of
-* the data structure. Since this is a BST we're'
-* expecting a sorted list.
+/*
+* Generalized view function.
 */
-void SplayTree::view(Node *n)
+void SplayTree::traverse(Node *n)
 {
     if (n == nullptr)
         return;
 
-    view(n->left);
-    std::cout << n->getData() << " ";
-    view(n->right);
+    std::cout << "pre-order: ";
+    traverse(n, ePreorder);
+    std::cout << std::endl;
+
+    std::cout << "in-order: ";
+    traverse(n, eInorder);
+    std::cout << std::endl;
+
+    std::cout << "post-order: ";
+    traverse(n, ePostorder);
+    std::cout << std::endl;
+}
+
+/**
+* Displays the tree in a many different manners of way.
+*/
+void SplayTree::traverse(Node *n, Order o)
+{
+    if (n == nullptr)
+        return;
+
+    switch (o)
+    {
+    case ePreorder:
+        std::cout << n->getData() << " ";
+        traverse(n->left, o);
+        traverse(n->right, o);
+        break;
+    case eInorder:
+        traverse(n->left, o);
+        std::cout << n->getData() << " ";
+        traverse(n->right, o);
+        break;
+    case ePostorder:
+        traverse(n->left, o);
+        traverse(n->right, o);
+        std::cout << n->getData() << " ";
+        break;
+    }
+}
+
+void SplayTree::display(Node *n)
+{
+    if (n != nullptr) {
+        std::cout << "horrible visual representation:" << std::endl;
+        display(n, 0);
+        std::cout << std::flush;
+    }
+}
+
+void SplayTree::display(Node *n, int indent)
+{
+    if (n != nullptr)
+    {
+        display(n->right, indent + 4);
+        if (indent > 0)
+            std::cout << std::setw(indent) << " ";
+        std::cout << n->getData() << std::endl;
+        display(n->left, indent + 4);
+    }
 }

@@ -21,6 +21,7 @@
         "ostream": "cpp",
         "streambuf": "cpp",
         "array": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "iomanip": "cpp"
     }
 }
