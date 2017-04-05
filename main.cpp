@@ -1,38 +1,51 @@
 #include <iostream>
+#include <time.h>
 #include "splaytree.h"
-
-#define TESTS 20
 
 int main(int argc, const char *argv[])
 {
     SplayTree s;
-    for (int i = TESTS; i >= 0; i--)
+    long values = 10;
+    for (int r = 1; r <= 1; r++)
     {
-        std::cout << "inserting " << i << std::endl;
-        s.root = s.insert(s.root, i);
-        s.traverse(s.root);
-        s.display(s.root);
-    }
-    for (int y = 0; y <= TESTS; y++)
-    {
-        if (y % 2 == 0)
+        s.root = nullptr;
+
+        // insert values from 10 to 0, even only.
+        for (long i = values; i >= 0; i--)
         {
-            std::cout << "removing " << y << std::endl;
-            s.remove(y);
-            s.traverse(s.root);
-            s.display(s.root);
+            if (i % 2 == 0)
+                s.root = s.insert(s.root, i);
         }
+
+        // insert values from 10 to 0, odd only.
+        for (long k = values; k >= 0; k--)
+        {
+            if (k % 2 != 0)
+                s.root = s.insert(s.root, k);
+        }
+
+        /// START TIMED BLOCK 
+        clock_t start = clock();
+        for (long j = 0; j < values; j++)
+        {
+            s.remove(j);
+
+            // uncomment to see all different traversals of the tree 
+            //s.traverse(s.root);
+
+            // uncomment to see the tree printed.
+            //s.display(s.root);
+        }
+
+        // -- STATISTICS
+        clock_t end = clock();
+        unsigned int ticks = (unsigned int)(end - start);
+        std::cout << "run " << r << " runtime: " << (((float)ticks) / CLOCKS_PER_SEC) << std::endl;
+        values *= 2; // double our values.
+
+        /// END TIMED BLOCK
     }
 
-    // reinsert an even element, should restructure tree.
-    //std::cout << "reinsert an even element" << std::endl;
-    s.root = s.insert(s.root, 2);
-    s.traverse(s.root);
-    s.display(s.root);
-
-    // try to insert a duplicate element, should be thrown out.
-    //std::cout << "insert duplicate" << std::endl;
-    s.root = s.insert(s.root, 2);
-    s.traverse(s.root);
-    s.display(s.root);
+    s.root = nullptr;
+    return 0;
 }

@@ -4,7 +4,7 @@
 class Node
 {
 public:
-  Node(int data)
+  Node(long data)
   {
     this->data = data;
     left = nullptr;
@@ -12,10 +12,12 @@ public:
   }
   ~Node()
   {
-    delete left;
-    delete right;
+    if (left)
+      delete left;
+    if (right)
+      delete right;
   }
-  int getData()
+  long getData()
   {
     return this->data;
   }
@@ -23,7 +25,7 @@ public:
   Node *right;
 
 private:
-  int data;
+  long data;
 };
 
 #endif

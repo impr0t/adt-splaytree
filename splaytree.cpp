@@ -2,15 +2,10 @@
 #include <iostream>
 #include <iomanip>
 
-void debug(std::string message)
-{
-    std::cout << message << std::endl;
-}
-
 /**
 * This function inserts a new node into the tree.
 */
-Node *SplayTree::insert(Node *n, int data)
+Node *SplayTree::insert(Node *n, long data)
 {
     if (n == nullptr)
     {
@@ -40,7 +35,7 @@ Node *SplayTree::insert(Node *n, int data)
     return newest;
 }
 
-void SplayTree::remove(int data)
+void SplayTree::remove(long data)
 {
     if (root == nullptr)
         return;
@@ -67,7 +62,7 @@ void SplayTree::remove(int data)
 * This function effectively splays a node
 * To the root of the tree.
 */
-Node *SplayTree::find(Node *n, int data)
+Node *SplayTree::find(Node *n, long data)
 {
     return splay(n, data);
 }
@@ -105,7 +100,7 @@ Node *SplayTree::rotateLeft(Node *a)
 * Splay elements recursively to the top when we look for them.
 * This element also auto balances our tree.
 */
-Node *SplayTree::splay(Node *n, int data)
+Node *SplayTree::splay(Node *n, long data)
 {
     // if our node is null or the data is what we're looking for
     // just return this.
@@ -226,7 +221,7 @@ void SplayTree::display(Node *n)
     }
 }
 
-void SplayTree::display(Node *n, int indent)
+void SplayTree::display(Node *n, long indent)
 {
     if (n != nullptr)
     {

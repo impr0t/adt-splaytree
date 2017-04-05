@@ -1,7 +1,7 @@
 NAME = "splay"
 
 local :
-	g++ -std=c++0x *.cpp -o $(NAME) 
+	g++ -g -std=c++0x -Wall -Werror *.cpp -o $(NAME) 
 
 lab :
 	g++11 *.cpp -o $(NAME)
