@@ -26,7 +26,7 @@ public:
   Node *rotateRight(Node *a);
   Node *rotateLeft(Node *a);
   void traverse(Node *n);
-  void traverse(Node *n, Order o);
+  long traverse(Node *n, Order o);
   void display(Node *n);
   void display(Node *n, long indent);
   Node *root;

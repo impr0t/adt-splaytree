@@ -115,11 +115,14 @@ Node *SplayTree::splay(Node *n, long data)
         if (n->left == nullptr)
             return n;
 
+        // check the immediate left child
+        // for having data > our input data
         if (n->left->getData() > data)
         {
-            // zig-zig
+            // continuously splay lesser data upwards if we
+            // keep running into greater data.
             n->left->left = splay(n->left->left, data);
-            n = rotateRight(n);
+            n = rotateRight(n); // right rotation does this.
         }
         else if (n->left->getData() < data)
         {
@@ -145,13 +148,14 @@ Node *SplayTree::splay(Node *n, long data)
         // here we have a conditon where we'll need to zig-zag.'
         if (n->right->getData() > data)
         {
-            // zig-zag
+            // zig zag
             n->right->left = splay(n->right->left, data);
             if (n->right->left != nullptr)
                 n->right = rotateRight(n->right);
         }
         else if (n->right->getData() < data)
         {
+            // keep splaying downward
             n->right->right = splay(n->right->right, data);
             n = rotateLeft(n);
         }
@@ -171,8 +175,10 @@ void SplayTree::traverse(Node *n)
     if (n == nullptr)
         return;
 
+    long r = 0;
+
     std::cout << "pre-order: ";
-    traverse(n, ePreorder);
+    r = traverse(n, ePreorder);
     std::cout << std::endl;
 
     std::cout << "in-order: ";
@@ -182,39 +188,45 @@ void SplayTree::traverse(Node *n)
     std::cout << "post-order: ";
     traverse(n, ePostorder);
     std::cout << std::endl;
+
+    std::cout << "size (bytes): " << r << std::endl;
 }
 
 /**
 * Displays the tree in a many different manners of way.
 */
-void SplayTree::traverse(Node *n, Order o)
+long SplayTree::traverse(Node *n, Order o)
 {
+    long size = sizeof(n);
+
     if (n == nullptr)
-        return;
+        return size;
 
     switch (o)
     {
     case ePreorder:
         std::cout << n->getData() << " ";
-        traverse(n->left, o);
-        traverse(n->right, o);
+        size += traverse(n->left, o);
+        size += traverse(n->right, o);
         break;
     case eInorder:
-        traverse(n->left, o);
+        size += traverse(n->left, o);
         std::cout << n->getData() << " ";
-        traverse(n->right, o);
+        size += traverse(n->right, o);
         break;
     case ePostorder:
-        traverse(n->left, o);
-        traverse(n->right, o);
+        size += traverse(n->left, o);
+        size += traverse(n->right, o);
         std::cout << n->getData() << " ";
         break;
     }
+    return size;
 }
 
 void SplayTree::display(Node *n)
 {
-    if (n != nullptr) {
+    if (n != nullptr)
+    {
         std::cout << "horrible visual representation:" << std::endl;
         display(n, 0);
         std::cout << std::flush;
